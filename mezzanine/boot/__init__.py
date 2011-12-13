@@ -10,6 +10,7 @@ registered.
 """
 
 from collections import defaultdict
+from copy import copy
 
 from django.conf import settings
 from django.contrib import admin
@@ -43,6 +44,26 @@ for entry in getattr(settings, "EXTRA_MODEL_FIELDS", []):
                                    "arguments for the field '%s' which could "
                                    "not be applied: %s" % (entry[1], e))
     fields[model_path][field_name] = field
+
+#Create new fields forEach translatable field.
+for entry in getattr(settings, "I18N_FIELDS", []):
+    model_path, field_name = entry.rsplit(".", 1)
+    try:
+        model = import_dotted_path(model_path)
+    except ImportError:
+        raise ImproperlyConfigured("The I18N_FIELDS setting contains "
+                                   "the model '%s' which could not be "
+                                   "imported." % model_path)
+    try:
+        field = model._meta.get_field(field_name)  # get the field
+    except:
+        raise ImproperlyConfigured("The I18N_FIELDS setting contains "
+                                    "the model '%s' which not contains "
+                                    "field %s" % (model_path, field_name))
+
+    ##Copy the field for each language active.
+    for code, language in getattr(settings, "LANGUAGES", []):
+        copy(field).contribute_to_class(model,field_name + "_" + code)
 
 
 def add_extra_model_fields(sender, **kwargs):
