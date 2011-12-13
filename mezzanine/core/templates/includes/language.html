@@ -1,0 +1,12 @@
+{% load i18n %}
+{% trans "Languages" %}: 
+<ul id="language-selector">
+        {% for code,lang in settings.LANGUAGES%}
+            <li
+            {% if request.LANGUAGE_CODE == code%}
+                class="active"
+            {% endif%}
+            >{{ code }}</li>
+        {% endfor %}
+</ul>
+

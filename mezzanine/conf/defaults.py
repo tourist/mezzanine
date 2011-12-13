@@ -445,6 +445,7 @@ register_setting(
         "DEV_SERVER", "FORMS_USE_HTML5", "GRAPPELLI_INSTALLED",
         "GOOGLE_ANALYTICS_ID", "LOGIN_URL", "LOGOUT_URL",
         "PAGES_MENU_SHOW_ALL", "SITE_TITLE", "SITE_TAGLINE", "RATINGS_MAX",
+        "LANGUAGES",
     ),
 )
 
